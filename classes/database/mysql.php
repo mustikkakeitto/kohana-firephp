@@ -2,14 +2,9 @@
 
 class Database_MySQL extends Kohana_Database_MySQL{
 	
-	private $database = 'default';
-	
-	public function query($type, $sql, $as_object){
-		if(isset($this->_config['connection']) === true){
-			$this->database = $this->_config['connection']['database'];
-		}
-		
-		$result = parent::query($type, $sql, false);
+	public function query($type, $sql, $as_object = FALSE, array $params = NULL)
+	{
+		$result = parent::query($type, $sql, $as_object, $params);
 		
 		if($type === Database::SELECT){
 			$table = array();
