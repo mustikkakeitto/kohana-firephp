@@ -8,6 +8,8 @@ class Kohana_Fire {
 	{
 		if (Fire::$_instance === NULL)
 		{
+			require_once Kohana::find_file('vendor','firePHP');
+			
 			Fire::$_instance = FirePHP::getInstance(TRUE);
 		}
 		

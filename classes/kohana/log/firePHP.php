@@ -21,7 +21,7 @@ class Kohana_Log_FirePHP extends Log_Writer {
 	 */
 	public function __construct($options = array())
 	{
-		$this->fire = FirePHP::getInstance(true);
+		$this->fire = Fire::instance();
 	}
 
 	/**

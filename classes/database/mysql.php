@@ -26,11 +26,11 @@ class Database_MySQL extends Kohana_Database_MySQL{
 			$group = Profiler::groups();
 			$group = Profiler::total($group['database (default)'][$sql][0]);
 			
-			FirePHP::getInstance()->table($this->database.' : ('.number_format($group[0], 6).'s) '.$sql, $table);
+			Fire::instance()->table($this->database.' : ('.number_format($group[0], 6).'s) '.$sql, $table);
 		}elseif($type === Database::INSERT){
-			FirePHP::getInstance()->info($this->database.' : Insert id: '.$result[0].' Affected rows: '.$result[1]);
+			Fire::instance()->info($this->database.' : Insert id: '.$result[0].' Affected rows: '.$result[1]);
 		}else{
-			FirePHP::getInstance()->info($this->database.' : Affected rows: '.$result[0]);
+			Fire::instance()->info($this->database.' : Affected rows: '.$result[0]);
 		}
 		
 		return $result;
