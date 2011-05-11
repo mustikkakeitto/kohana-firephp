@@ -16,12 +16,24 @@ class Fire_Log_Writer extends Log_Writer {
 	 * Creates a new file logger.
 	 *
 	 * @param   string  firePHP options
-	 * 							currently does nothing
 	 * @return  void
 	 */
 	public function __construct($options = array())
 	{
 		$this->fire = FirePHP::getInstance(TRUE);
+	}
+	
+	/**
+	 * Writes the profiler data into Firebug if Kohana profiler is on
+	 * @return	void
+	 */ 
+	public function __destruct()
+	{
+		
+		if (Kohana::$profiling === TRUE)
+		{
+			$this->profile();
+		}
 	}
 
 	/**
@@ -35,51 +47,90 @@ class Fire_Log_Writer extends Log_Writer {
 		foreach ($messages as $message)
 		{
 			// Write each message to firePHP
-			if($message['level'] === Log::ERROR){
-				$this->fire->error($message['body']);
-			}else{
-				$this->fire->log($message['body']);
+			switch ($message['level'])
+			{
+				default :
+				case Log::NOTICE :
+				case Log::DEBUG :
+					
+					$this->fire->log($message['body']);
+				
+				break;
+				
+				case Log::INFO :
+					
+					$this->fire->info($message['body']);
+					
+				break;
+								
+				case Log::EMERGENCY :
+				case Log::CRITICAL :
+				case Log::ERROR :
+					
+					$this->fire->error($message['body']);
+					
+				break;
+				
+				case Log::WARNING :
+					
+					$this->fire->warn($message['body']);
+					
+				break;
 			}
 		}
 	}
 	
-	// Writes final info to the console
-	public function __destruct(){
-		$app = Profiler::application();
+	/**
+	 * FirePHP version of profiler
+	 * @return	void
+	 */
+	public function profile()
+	{	
+		$application	= Profiler::application();
+		$group_stats 	= Profiler::group_stats();
+		$group_cols   	= array('min', 'max', 'average', 'total');
 		
-		$group = Profiler::groups();
-		
-		$table = array();
-		$table[] = array('Type', 'Time (s)', 'Mem (kb)');
-		
-		foreach($group as $rName=>$route)
-		{			
-			$table[] = array($rName);
+		// All profiler stats
+		foreach (Profiler::groups() as $group => $benchmarks)
+		{
+			$table = array(
+				array_merge(array('Benchmark'), $group_cols),
+			);
 			
-			foreach($route as $tName=>$type)
+			foreach ($benchmarks as $name => $tokens)
 			{
-				foreach($type as $stat)
+				$stats = Profiler::stats($tokens);
+				
+				$row =  array($name.' ('.count($tokens).')');
+				
+				foreach ($group_cols as $key)
 				{
-					$stats = Profiler::total($stat);
-					$table[] = array
-					(
-						$tName,
-						number_format($stats[0], 6),
-						number_format($stats[1] / 1024, 4),
-					);
+					$row[] = number_format($stats[$key]['time'], 6).' s / '
+							.number_format($stats[$key]['memory'] / 1024, 4).' kB';
 				}
+				
+				array_push($table, $row);
 			}
+			
+			$this->fire->table($group, $table);
 		}
 		
+		// Log the session
 		$this->fire->info(Session::instance()->as_array(), 'Session');
 		
-		$this->fire->group('Stats: '.$app['count']);
-		$this->fire->info('Min: '.number_format($app['min']['time'], 6).'s '.number_format($app['min']['memory']/1024, 4).'kb');
-		$this->fire->info('Max: '.number_format($app['max']['time'], 6).'s '.number_format($app['max']['memory']/1024, 4).'kb');
-		$this->fire->info('Average: '.number_format($app['average']['time'], 6).'s '.number_format($app['average']['memory']/1024, 4).'kb');
-		$this->fire->info('Total: '.number_format($app['total']['time'], 6).'s '.number_format($app['total']['memory']/1024, 4).'kb');
+		// Group the app stats
+		$this->fire->group('Stats: '.$application['count']);
+		
+		foreach ($group_cols as $key)
+		{
+			$this->fire->info(
+				ucfirst($key).': '.
+				number_format($application[$key]['time'], 6).'s '.
+				number_format($application[$key]['memory']/1024, 4).'kB'
+			);
+		}
+		
 		$this->fire->groupEnd();
-		//$this->fire->table('Execution stats ('.number_format($endTime, 6).'s '.number_format($endMem, 4).'kb)', $table);
 	}
 	
 } // End Log_FirePHP
