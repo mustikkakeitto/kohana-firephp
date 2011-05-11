@@ -108,10 +108,6 @@ class Fire_Log_Writer extends Log_Writer {
 		}
 		
 		
-		// Log the session
-		$this->fire->info(Session::instance()->as_array(), 'Session');
-		
-		
 		// Group the app stats
 		$this->fire->group('Stats: '.$application['count']);
 		
@@ -125,6 +121,10 @@ class Fire_Log_Writer extends Log_Writer {
 		}
 		
 		$this->fire->groupEnd();
+		
+		
+		// Log the session
+		$this->fire->log(Session::instance()->as_array(), 'Session');
 	}
 	
 } // End Fire_Log_Writer
