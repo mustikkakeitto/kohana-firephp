@@ -2,14 +2,16 @@
 /**
  * File log writer.
  *
- * @package    Kohana
- * @author     Pedro Sland
- * @copyright  (c) 2008-2009 Pedro Sland
- * @license    http://kohanaphp.com/license.html
+ * @package    	Kohana
+ * @author     	Pedro Sland
+ * @copyright  	(c) 2008-2009 Pedro Sland
+ * @license    	http://kohanaphp.com/license.html
  */
 class Fire_Log_Writer extends Log_Writer {
 
-	// Instance of FirePHP
+	/**
+	 * @var	FirePHP	singleton
+	 */
 	protected $fire;
 
 	/**
@@ -25,12 +27,12 @@ class Fire_Log_Writer extends Log_Writer {
 	
 	/**
 	 * Writes the profiler data into Firebug if Kohana profiler is on
+	 * 
 	 * @return	void
 	 */ 
 	public function __destruct()
-	{
-		
-		if (Kohana::$profiling === TRUE)
+	{		
+		if (TRUE === Kohana::$profiling)
 		{
 			$this->profile();
 		}
@@ -51,30 +53,19 @@ class Fire_Log_Writer extends Log_Writer {
 			{
 				default :
 				case Log::NOTICE :
-				case Log::DEBUG :
-					
 					$this->fire->log($message['body']);
-				
 				break;
-				
+				case Log::DEBUG :
 				case Log::INFO :
-					
-					$this->fire->info($message['body']);
-					
-				break;
-								
+					$this->fire->info($message['body']);					
+				break;								
 				case Log::EMERGENCY :
 				case Log::CRITICAL :
 				case Log::ERROR :
-					
 					$this->fire->error($message['body']);
-					
 				break;
-				
-				case Log::WARNING :
-					
-					$this->fire->warn($message['body']);
-					
+				case Log::WARNING :					
+					$this->fire->warn($message['body']);					
 				break;
 			}
 		}
@@ -82,6 +73,7 @@ class Fire_Log_Writer extends Log_Writer {
 	
 	/**
 	 * FirePHP version of profiler
+	 * 
 	 * @return	void
 	 */
 	public function profile()
@@ -93,9 +85,9 @@ class Fire_Log_Writer extends Log_Writer {
 		// All profiler stats
 		foreach (Profiler::groups() as $group => $benchmarks)
 		{
-			$table = array(
-				array_merge(array('Benchmark'), $group_cols),
-			);
+			$table_head = array_merge(array('Benchmark'), $group_cols);
+			
+			$table = array($table_head);
 			
 			foreach ($benchmarks as $name => $tokens)
 			{
@@ -115,8 +107,10 @@ class Fire_Log_Writer extends Log_Writer {
 			$this->fire->table($group, $table);
 		}
 		
+		
 		// Log the session
 		$this->fire->info(Session::instance()->as_array(), 'Session');
+		
 		
 		// Group the app stats
 		$this->fire->group('Stats: '.$application['count']);
@@ -126,11 +120,11 @@ class Fire_Log_Writer extends Log_Writer {
 			$this->fire->info(
 				ucfirst($key).': '.
 				number_format($application[$key]['time'], 6).'s '.
-				number_format($application[$key]['memory']/1024, 4).'kB'
+				number_format($application[$key]['memory'] / 1024, 4).'kB'
 			);
 		}
 		
 		$this->fire->groupEnd();
 	}
 	
-} // End Log_FirePHP
+} // End Fire_Log_Writer
