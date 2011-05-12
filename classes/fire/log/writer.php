@@ -77,8 +77,7 @@ class Fire_Log_Writer extends Log_Writer {
 	 * @return	void
 	 */
 	public function profile()
-	{	
-		$application	= Profiler::application();
+	{			
 		$group_stats 	= Profiler::group_stats();
 		$group_cols   	= array('min', 'max', 'average', 'total');
 		
@@ -87,13 +86,13 @@ class Fire_Log_Writer extends Log_Writer {
 		{
 			$table_head = array_merge(array('Benchmark'), $group_cols);
 			
-			$table = array($table_head);
+			$table 		= array($table_head);
 			
 			foreach ($benchmarks as $name => $tokens)
 			{
-				$stats = Profiler::stats($tokens);
+				$stats 	= Profiler::stats($tokens);
 				
-				$row =  array($name.' ('.count($tokens).')');
+				$row 	=  array($name.' ('.count($tokens).')');
 				
 				foreach ($group_cols as $key)
 				{
@@ -108,19 +107,22 @@ class Fire_Log_Writer extends Log_Writer {
 		}
 		
 		
-		// Group the app stats
-		$this->fire->group('Stats: '.$application['count']);
+		// Application stats
+		$application		= Profiler::application();
+		$application_cols 	= array('min', 'max', 'average', 'current');
 		
-		foreach ($group_cols as $key)
+		$table 	= array(array_merge(array('Benchmark'), $application_cols));
+		$row 	= array('Execution');
+		
+		foreach ($application_cols as $key)
 		{
-			$this->fire->info(
-				ucfirst($key).': '.
-				number_format($application[$key]['time'], 6).'s '.
-				number_format($application[$key]['memory'] / 1024, 4).'kB'
-			);
+			$row[] = number_format($application[$key]['time'], 6).' s / '
+					.number_format($application[$key]['memory'] / 1024, 4).' kB';
 		}
+				
+		array_push($table, $row);
 		
-		$this->fire->groupEnd();
+		$this->fire->table('application', $table);
 		
 		
 		// Log the session
