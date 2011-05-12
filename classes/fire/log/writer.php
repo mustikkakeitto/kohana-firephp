@@ -5,10 +5,10 @@
  * Originally forked from github.com/pedrosland/kohana-firephp
  * [!!] This is a complete rewrite
  * 
- * @package	Fire
+ * @package		Fire
  * @author		Kemal Delalic <github.com/kemo>
  * @author		Mathew Davies <github.com/ThePixelDeveloper>
- * @version	1.0.0.
+ * @version		1.0.0.
  */
 class Fire_Log_Writer extends Log_Writer {
 
@@ -34,11 +34,11 @@ class Fire_Log_Writer extends Log_Writer {
 	 * 
 	 * Accepts array of params to override:
 	 * 
-	 *  Type	| Setting   | Description                   | Default Value
+	 *  Type    | Setting   | Description                   | Default Value
 	 * ---------|-----------|-------------------------------|---------------
-	 * `bool`   | profiling | Output profiler data in FB?	| Kohana::$profiling
-	 * `bool`   | session   | Log the whole session?		| FALSE
-	 * `FirePHP`| fire		| FirePHP dependency injection	| FirePHP singleton
+	 * `bool`   | profiling | Output profiler data in FB?   | Kohana::$profiling
+	 * `bool`   | session   | Log the whole session?        | FALSE
+	 * `FirePHP`| fire      | FirePHP dependency injection  | FirePHP object
 	 *
 	 * @param   string  firePHP options
 	 * @return  void
@@ -51,7 +51,7 @@ class Fire_Log_Writer extends Log_Writer {
 	}
 	
 	/**
-	 * Writes the profiler data into Firebug if Kohana profiler is on
+	 * Handle objects' destruction, writing the Profiler and Session data
 	 * 
 	 * @return	void
 	 */ 
