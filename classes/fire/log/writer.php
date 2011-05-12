@@ -50,9 +50,16 @@ class Fire_Log_Writer extends Log_Writer {
 	 */ 
 	public function __destruct()
 	{		
+		// Log the profiler
 		if (TRUE === $this->_profiling)
 		{
-			$this->profile();
+			$this->log_profiler();
+		}
+	
+		// Log the session?
+		if (TRUE === $this->_session)
+		{
+			$this->log_session();
 		}
 	}
 
@@ -83,18 +90,16 @@ class Fire_Log_Writer extends Log_Writer {
 					$this->_fire->error($message['body']);
 				break;
 				case Log::WARNING :					
-					$this->_fire->warn($message['body']);					
+					$this->_fire->warn($message['body']);
 				break;
 			}
 		}
 	}
 	
 	/**
-	 * FirePHP version of profiler
-	 * 
-	 * @return	void
+	 * Logs the Kohana Profiler 
 	 */
-	public function profile()
+	public function log_profiler()
 	{
 		$group_stats 	= Profiler::group_stats();
 		$group_cols   	= array('min', 'max', 'average', 'total');
@@ -141,12 +146,14 @@ class Fire_Log_Writer extends Log_Writer {
 		array_push($table, $row);
 		
 		$this->_fire->table('application', $table);
-		
-		// Log the session?
-		if ($this->_session)
-		{
-			$this->_fire->log(Session::instance()->as_array(), 'Session');
-		}
+	}
+	
+	/**
+	 * Logs the current session
+	 */
+	public function log_session()
+	{
+		$this->_fire->log(Session::instance()->as_array(), 'Session');
 	}
 	
 } // End Fire_Log_Writer
