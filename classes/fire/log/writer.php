@@ -1,6 +1,6 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
- * File log writer.
+ * Fire log writer.
  * 
  * Originally forked from github.com/pedrosland/kohana-firephp
  * [!!] This is a complete rewrite
@@ -37,8 +37,8 @@ class Fire_Log_Writer extends Log_Writer {
 	 */
 	public function __construct($options = array())
 	{
-		$this->_profiling 	= Arr::get($options, 'profiling', Kohana::$profiling);
-		$this->_session 	= Arr::get($options, 'session', FALSE);
+		$this->_profiling = Arr::get($options, 'profiling', Kohana::$profiling);
+		$this->_session = Arr::get($options, 'session', FALSE);
 		
 		$this->_fire = FirePHP::getInstance(TRUE);
 	}
@@ -56,10 +56,10 @@ class Fire_Log_Writer extends Log_Writer {
 			$this->log_profiler();
 		}
 	
-		// Log the session?
+		// Log the current session by default?
 		if (TRUE === $this->_session)
 		{
-			$this->log_session();
+			$this->log_session(Session::instance());
 		}
 	}
 
@@ -98,6 +98,8 @@ class Fire_Log_Writer extends Log_Writer {
 	
 	/**
 	 * Logs the Kohana Profiler 
+	 * 
+	 * @return	void
 	 */
 	public function log_profiler()
 	{
@@ -150,10 +152,13 @@ class Fire_Log_Writer extends Log_Writer {
 	
 	/**
 	 * Logs the current session
+	 * 
+	 * @param	Session	session to log
+	 * @return	void
 	 */
-	public function log_session()
+	public function log_session(Session $session)
 	{
-		$this->_fire->log(Session::instance()->as_array(), 'Session');
+		$this->_fire->log($session->as_array(), 'Session');
 	}
 	
 } // End Fire_Log_Writer
