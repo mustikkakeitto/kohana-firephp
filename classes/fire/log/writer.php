@@ -1,11 +1,14 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 /**
  * File log writer.
- *
- * @package    	Kohana
- * @author     	Pedro Sland
- * @copyright  	(c) 2008-2009 Pedro Sland
- * @license    	http://kohanaphp.com/license.html
+ * 
+ * Originally forked from github.com/pedrosland/kohana-firephp
+ * [!!] This is a complete rewrite
+ * 
+ * @package	Fire
+ * @author		Kemal Delalic <github.com/kemo>
+ * @author		Mathew Davies <github.com/ThePixelDeveloper>
+ * @version	1.0.0.
  */
 class Fire_Log_Writer extends Log_Writer {
 
@@ -91,7 +94,6 @@ class Fire_Log_Writer extends Log_Writer {
 			foreach ($benchmarks as $name => $tokens)
 			{
 				$stats 	= Profiler::stats($tokens);
-				
 				$row 	=  array($name.' ('.count($tokens).')');
 				
 				foreach ($group_cols as $key)
@@ -108,6 +110,7 @@ class Fire_Log_Writer extends Log_Writer {
 		
 		
 		// Application stats
+		// @todo merge this with other stats
 		$application		= Profiler::application();
 		$application_cols 	= array('min', 'max', 'average', 'current');
 		
@@ -123,7 +126,6 @@ class Fire_Log_Writer extends Log_Writer {
 		array_push($table, $row);
 		
 		$this->fire->table('application', $table);
-		
 		
 		// Log the session
 		$this->fire->log(Session::instance()->as_array(), 'Session');
