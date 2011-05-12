@@ -31,6 +31,14 @@ class Fire_Log_Writer extends Log_Writer {
 
 	/**
 	 * Creates a new file logger.
+	 * 
+	 * Accepts array of params to override:
+	 * 
+	 *  Type	| Setting   | Description                   | Default Value
+	 * ---------|-----------|-------------------------------|---------------
+	 * `bool`   | profiling | Output profiler data in FB?	| Kohana::$profiling
+	 * `bool`   | session   | Log the whole session?		| FALSE
+	 * `FirePHP`| fire		| FirePHP dependency injection	| FirePHP singleton
 	 *
 	 * @param   string  firePHP options
 	 * @return  void
@@ -39,8 +47,7 @@ class Fire_Log_Writer extends Log_Writer {
 	{
 		$this->_profiling = Arr::get($options, 'profiling', Kohana::$profiling);
 		$this->_session = Arr::get($options, 'session', FALSE);
-		
-		$this->_fire = FirePHP::getInstance(TRUE);
+		$this->_fire = Arr::get($options, 'fire', FirePHP::getInstance(TRUE));
 	}
 	
 	/**
@@ -82,7 +89,7 @@ class Fire_Log_Writer extends Log_Writer {
 				break;
 				case Log::DEBUG :
 				case Log::INFO :
-					$this->_fire->info($message['body']);					
+					$this->_fire->info($message['body']);
 				break;								
 				case Log::EMERGENCY :
 				case Log::CRITICAL :
@@ -151,7 +158,7 @@ class Fire_Log_Writer extends Log_Writer {
 	}
 	
 	/**
-	 * Logs the current session
+	 * Logs the session
 	 * 
 	 * @param	Session	session to log
 	 * @return	void
