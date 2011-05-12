@@ -15,7 +15,19 @@ class Fire_Log_Writer extends Log_Writer {
 	/**
 	 * @var	FirePHP	singleton
 	 */
-	protected $fire;
+	protected $_fire;
+	
+	/**
+	 * Should the profiler be displayed
+	 * @var bool
+	 */
+	protected $_profiling;
+	
+	/**
+	 * Should sessions be logged?
+	 * @var bool
+	 */
+	protected $_session;
 
 	/**
 	 * Creates a new file logger.
@@ -25,7 +37,10 @@ class Fire_Log_Writer extends Log_Writer {
 	 */
 	public function __construct($options = array())
 	{
-		$this->fire = FirePHP::getInstance(TRUE);
+		$this->_profiling 	= Arr::get($options, 'profiling', Kohana::$profiling);
+		$this->_session 	= Arr::get($options, 'session', FALSE);
+		
+		$this->_fire = FirePHP::getInstance(TRUE);
 	}
 	
 	/**
@@ -35,7 +50,7 @@ class Fire_Log_Writer extends Log_Writer {
 	 */ 
 	public function __destruct()
 	{		
-		if (TRUE === Kohana::$profiling)
+		if (TRUE === $this->_profiling)
 		{
 			$this->profile();
 		}
@@ -56,19 +71,19 @@ class Fire_Log_Writer extends Log_Writer {
 			{
 				default :
 				case Log::NOTICE :
-					$this->fire->log($message['body']);
+					$this->_fire->log($message['body']);
 				break;
 				case Log::DEBUG :
 				case Log::INFO :
-					$this->fire->info($message['body']);					
+					$this->_fire->info($message['body']);					
 				break;								
 				case Log::EMERGENCY :
 				case Log::CRITICAL :
 				case Log::ERROR :
-					$this->fire->error($message['body']);
+					$this->_fire->error($message['body']);
 				break;
 				case Log::WARNING :					
-					$this->fire->warn($message['body']);					
+					$this->_fire->warn($message['body']);					
 				break;
 			}
 		}
@@ -80,7 +95,7 @@ class Fire_Log_Writer extends Log_Writer {
 	 * @return	void
 	 */
 	public function profile()
-	{			
+	{
 		$group_stats 	= Profiler::group_stats();
 		$group_cols   	= array('min', 'max', 'average', 'total');
 		
@@ -99,13 +114,13 @@ class Fire_Log_Writer extends Log_Writer {
 				foreach ($group_cols as $key)
 				{
 					$row[] = number_format($stats[$key]['time'], 6).' s / '
-							.number_format($stats[$key]['memory'] / 1024, 4).' kB';
+						.number_format($stats[$key]['memory'] / 1024, 4).' kB';
 				}
 				
 				array_push($table, $row);
 			}
 			
-			$this->fire->table($group, $table);
+			$this->_fire->table($group, $table);
 		}
 		
 		
@@ -120,15 +135,18 @@ class Fire_Log_Writer extends Log_Writer {
 		foreach ($application_cols as $key)
 		{
 			$row[] = number_format($application[$key]['time'], 6).' s / '
-					.number_format($application[$key]['memory'] / 1024, 4).' kB';
+				.number_format($application[$key]['memory'] / 1024, 4).' kB';
 		}
 				
 		array_push($table, $row);
 		
-		$this->fire->table('application', $table);
+		$this->_fire->table('application', $table);
 		
-		// Log the session
-		$this->fire->log(Session::instance()->as_array(), 'Session');
+		// Log the session?
+		if ($this->_session)
+		{
+			$this->_fire->log(Session::instance()->as_array(), 'Session');
+		}
 	}
 	
 } // End Fire_Log_Writer
