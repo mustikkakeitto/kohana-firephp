@@ -12,3 +12,4 @@
 	- Your server probably limits header size to ~8KB
 	- Outputting large datasets can break this
 - Vendor used for this version has a known issue with non-UTF8 arrays
+- It's *highly* recommended that you disable this module in production
