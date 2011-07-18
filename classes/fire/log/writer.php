@@ -13,7 +13,7 @@
 class Fire_Log_Writer extends Log_Writer {
 
 	/**
-	 * @var	FirePHP	singleton
+	 * @var	FirePHP
 	 */
 	protected $_fire;
 	
@@ -21,13 +21,13 @@ class Fire_Log_Writer extends Log_Writer {
 	 * Should the profiler be displayed
 	 * @var bool
 	 */
-	protected $_profiling;
+	protected $_log_profiler;
 	
 	/**
 	 * Should sessions be logged?
 	 * @var bool
 	 */
-	protected $_session;
+	protected $_log_session;
 
 	/**
 	 * Creates a new file logger.
@@ -38,15 +38,15 @@ class Fire_Log_Writer extends Log_Writer {
 	 * ---------|-----------|-------------------------------|---------------
 	 * `bool`   | profiling | Output profiler data in FB?   | Kohana::$profiling
 	 * `bool`   | session   | Log the whole session?        | FALSE
-	 * `FirePHP`| fire      | FirePHP dependency injection  | FirePHP object
+	 * `FirePHP`| fire      | FirePHP dependency injection  | FirePHP singleton
 	 *
 	 * @param   string  firePHP options
 	 * @return  void
 	 */
-	public function __construct($options = array())
+	public function __construct(array $options = array())
 	{
-		$this->_profiling = Arr::get($options, 'profiling', Kohana::$profiling);
-		$this->_session = Arr::get($options, 'session', FALSE);
+		$this->_log_profiler = Arr::get($options, 'profiling', Kohana::$profiling);
+		$this->_log_session = Arr::get($options, 'session', FALSE);
 		$this->_fire = Arr::get($options, 'fire', FirePHP::getInstance(TRUE));
 	}
 	
@@ -58,13 +58,13 @@ class Fire_Log_Writer extends Log_Writer {
 	public function __destruct()
 	{		
 		// Log the profiler
-		if (TRUE === $this->_profiling)
+		if (TRUE === $this->_log_profiler)
 		{
 			$this->log_profiler();
 		}
 	
 		// Log the current session by default?
-		if (TRUE === $this->_session)
+		if (TRUE === $this->_log_session)
 		{
 			$this->log_session(Session::instance());
 		}
@@ -104,6 +104,23 @@ class Fire_Log_Writer extends Log_Writer {
 	}
 	
 	/**
+	 * Setter / getter for writer object
+	 * 
+	 * @param	FirePHP		optional, writer
+	 * @return	FirePHP 	on get
+	 * @return	object		chainable ($this) on set
+	 */
+	public function writer(FirePHP $writer = NULL)
+	{
+		if (NULL === $writer)
+			return $this->_fire;
+			
+		$this->_fire = $writer;
+		
+		return $this;
+	}
+	
+	/**
 	 * Logs the Kohana Profiler 
 	 * 
 	 * @return	void
@@ -117,13 +134,12 @@ class Fire_Log_Writer extends Log_Writer {
 		foreach (Profiler::groups() as $group => $benchmarks)
 		{
 			$table_head = array_merge(array('Benchmark'), $group_cols);
-			
 			$table 		= array($table_head);
 			
 			foreach ($benchmarks as $name => $tokens)
 			{
 				$stats 	= Profiler::stats($tokens);
-				$row 	=  array($name.' ('.count($tokens).')');
+				$row 	= array($name.' ('.count($tokens).')');
 				
 				foreach ($group_cols as $key)
 				{
