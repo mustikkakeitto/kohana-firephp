@@ -46,7 +46,9 @@ class Fire_Log_Writer extends Log_Writer {
 	public function __construct(array $options = array())
 	{
 		$this->_log_profiler = Arr::get($options, 'profiling', Kohana::$profiling);
+		
 		$this->_log_session = Arr::get($options, 'session', FALSE);
+		
 		$this->_fire = Arr::get($options, 'fire', FirePHP::getInstance(TRUE));
 	}
 	
@@ -58,13 +60,13 @@ class Fire_Log_Writer extends Log_Writer {
 	public function __destruct()
 	{		
 		// Log the profiler
-		if (TRUE === $this->_log_profiler)
+		if ($this->_log_profiler === TRUE)
 		{
 			$this->log_profiler();
 		}
 	
 		// Log the current session by default?
-		if (TRUE === $this->_log_session)
+		if ($this->_log_session === TRUE)
 		{
 			$this->log_session(Session::instance());
 		}
@@ -112,7 +114,7 @@ class Fire_Log_Writer extends Log_Writer {
 	 */
 	public function writer(FirePHP $writer = NULL)
 	{
-		if (NULL === $writer)
+		if ($writer === NULL)
 			return $this->_fire;
 			
 		$this->_fire = $writer;
