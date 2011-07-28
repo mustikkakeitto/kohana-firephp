@@ -38,9 +38,9 @@ class Fire_Log_Writer extends Log_Writer {
 	 * ---------|-----------|-------------------------------|---------------
 	 * `bool`   | profiling | Output profiler data in FB?   | Kohana::$profiling
 	 * `bool`   | session   | Log the whole session?        | FALSE
-	 * `FirePHP`| fire      | FirePHP dependency injection  | FirePHP singleton
+	 * `FirePHP`| fire      | FirePHP Dependency Injection  | FirePHP singleton
 	 *
-	 * @param   string  firePHP options
+	 * @param   string  Writer options
 	 * @return  void
 	 */
 	public function __construct(array $options = array())
@@ -54,6 +54,7 @@ class Fire_Log_Writer extends Log_Writer {
 	
 	/**
 	 * Handle objects' destruction, writing the Profiler and Session data
+	 * if enabled
 	 * 
 	 * @return	void
 	 */ 
@@ -123,7 +124,7 @@ class Fire_Log_Writer extends Log_Writer {
 	}
 	
 	/**
-	 * Logs the Kohana Profiler 
+	 * Logs Kohana Profiler benchmark(s)
 	 * 
 	 * @return	void
 	 */
