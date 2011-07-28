@@ -30,7 +30,7 @@ class Fire_Log_Writer extends Log_Writer {
 	protected $_log_session;
 
 	/**
-	 * Creates a new file logger.
+	 * Creates a new fire logger.
 	 * 
 	 * Accepts array of params to override:
 	 * 
