@@ -13,14 +13,14 @@ abstract class Fire_Helper {
 	/**
 	 * Log object with label to firebug console
 	 *
-	 * @see FirePHP::LOG
-	 * @param mixed $object
-	 * @param string|null $label
-	 * @param array $options
-	 * @return true
-	 * @throws Exception
+	 * @see 	FirePHP::LOG
+	 * @param 	mixed 	$object
+	 * @param 	string	$label
+	 * @param 	array 	$options
+	 * @return 	bool
+	 * @throws 	Exception
 	 */
-	public static function log($object, $label=null, $options=array())
+	public static function log($object, $label = NULL, $options = array())
 	{
 		return FirePHP::getInstance()->log($object, $label, $options);
 	}
@@ -29,14 +29,14 @@ abstract class Fire_Helper {
 	/**
 	 * Log object with label to firebug console
 	 *
-	 * @see FirePHP::INFO
-	 * @param mixed $object
-	 * @param string|null $label
-	 * @param array $options
-	 * @return true
-	 * @throws Exception
+	 * @see 	FirePHP::INFO
+	 * @param 	mixed	$object
+	 * @param 	string	$label
+	 * @param 	array 	$options
+	 * @return 	bool
+	 * @throws 	Exception
 	 */
-	public static function info($object, $label=null, $options=array())
+	public static function info($object, $label = NULL, $options = array())
 	{
 		return FirePHP::getInstance()->info($object, $label, $options);
 	}
@@ -44,14 +44,14 @@ abstract class Fire_Helper {
 	/**
 	 * Log object with label to firebug console
 	 *
-	 * @see FirePHP::WARN
-	 * @param mixed $object
-	 * @param string|null $label
-	 * @param array $options
-	 * @return true
-	 * @throws Exception
+	 * @see 	FirePHP::WARN
+	 * @param 	mixed 	$object
+	 * @param 	string 	$label
+	 * @param 	array 	$options
+	 * @return 	bool
+	 * @throws 	Exception
 	 */
-	public static function warn($object, $label=null, $options=array())
+	public static function warn($object, $label = NULL, $options = array())
 	{
 		return FirePHP::getInstance()->warn($object, $label, $options);
 	}
@@ -59,14 +59,14 @@ abstract class Fire_Helper {
 	/**
 	 * Log object with label to firebug console
 	 *
-	 * @see FirePHP::ERROR
-	 * @param mixed $object
-	 * @param string|null $label
-	 * @param array $options
-	 * @return true
-	 * @throws Exception
+	 * @see 	FirePHP::ERROR
+	 * @param 	mixed 	$object
+	 * @param 	string	$label
+	 * @param 	array 	$options
+	 * @return 	bool
+	 * @throws 	Exception
 	 */
-	public static function error($object, $label=null, $options=array())
+	public static function error($object, $label = NULL, $options = array())
 	{
 		return FirePHP::getInstance()->error($object, $label, $options);
 	}
@@ -74,12 +74,12 @@ abstract class Fire_Helper {
 	/**
 	 * Dumps key and variable to firebug server panel
 	 *
-	 * @see FirePHP::DUMP
-	 * @param string $key
-	 * @param mixed $variable
-	 * @param array $options
-	 * @return true
-	 * @throws Exception
+	 * @see 	FirePHP::DUMP
+	 * @param 	string 	$key
+	 * @param 	mixed 	$variable
+	 * @param 	array 	$options
+	 * @return 	bool
+	 * @throws 	Exception
 	 */
 	public static function dump($key, $variable, $options = array())
 	{
@@ -89,10 +89,10 @@ abstract class Fire_Helper {
 	/**
 	 * Log a trace in the firebug console
 	 *
-	 * @see FirePHP::TRACE
-	 * @param string $label
-	 * @return true
-	 * @throws Exception
+	 * @see 	FirePHP::TRACE
+	 * @param 	string 	$label
+	 * @return 	true
+	 * @throws 	Exception
 	 */
 	public static function trace($label)
 	{
@@ -102,12 +102,12 @@ abstract class Fire_Helper {
 	/**
 	 * Log a table in the firebug console
 	 *
-	 * @see FirePHP::TABLE
-	 * @param string $label
-	 * @param string $table
-	 * @param array $options
-	 * @return true
-	 * @throws Exception
+	 * @see 	FirePHP::TABLE
+	 * @param 	string 	$label
+	 * @param 	string 	$table
+	 * @param 	array 	$options
+	 * @return 	bool
+	 * @throws 	Exception
 	 */
 	public static function table($label, $table, $options = array())
 	{
@@ -117,10 +117,10 @@ abstract class Fire_Helper {
 	/**
 	 * Log varible to Firebug
 	 *
-	 * @see http://www.firephp.org/Wiki/Reference/Fb
-	 * @param mixed $object The variable to be logged
-	 * @return true Return TRUE if message was added to headers, FALSE otherwise
-	 * @throws Exception
+	 * @see 	http://www.firephp.org/Wiki/Reference/Fb
+	 * @param 	mixed 	The variable to be logged
+	 * @return 	bool
+	 * @throws 	Exception
 	 */
 	public static function fb($object)
 	{
