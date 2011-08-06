@@ -59,7 +59,7 @@ class Fire_Log_Writer extends Log_Writer {
 	 * @return	void
 	 */ 
 	public function __destruct()
-	{		
+	{
 		// Log the profiler
 		if ($this->_log_profiler === TRUE)
 		{
