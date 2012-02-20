@@ -1,9 +1,5 @@
 <?php defined('SYSPATH') or die('No direct script access.');
 
-// Disable in CLI
-if (Kohana::$is_cli)
-	return;
-
 // Find and include the vendor
 require_once Kohana::find_file('vendor/FirePHPCore','FirePHP.class');
 
